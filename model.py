@@ -3,21 +3,15 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 class LPC(nn.Module):
-    # Spatial Pyramid Pooling - Fast (SPPF) layer for YOLOv5 by Glenn Jocher
+    
     def __init__(self, c1):
-        """
-        Initializes YOLOv5 SPPF layer with given channels and kernel size for YOLOv5 model, combining convolution and
-        max pooling.
-
-        Equivalent to SPP(k=(5, 9, 13)).
-        """
+        
         super().__init__()
         c_ = c1 // 2  # hidden channels
         self.cv1 = self._conv_layer(c1,c_)
         self.cv2 = self._conv_layer(c_,c_)
         self.cv3= self._conv_layer(c1*2,c1*2,1)
     def forward(self, x):
-        """Processes input through a series of convolutions and max pooling operations for feature extraction."""
         x1 = self.cv1(x)
         x2=self.cv2(x1)
         x=(torch.cat((x, x1,x2), 1))
